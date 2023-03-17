@@ -30,7 +30,6 @@ io.on("connection", socket => {
     socket.join(room);
 
     const { user, isUserExist } = addUser({ name, room });
-    // console.log("isUserExist", isUserExist);
 
     const userMessage = isUserExist
       ? `${user.name}, here you are again`
@@ -87,7 +86,7 @@ io.on("connection", socket => {
   });
 
   io.on("disconnect", () => {
-    console.log("Disconnect"); // the Set contains at least the socket ID
+    console.log("Disconnect");
   });
 });
 

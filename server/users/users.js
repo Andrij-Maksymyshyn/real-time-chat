@@ -13,7 +13,6 @@ const findUser = user => {
 
 const addUser = user => {
   const isUserExist = findUser(user);
-  // console.log("users", users);
 
   if (!isUserExist) {
     users.push(user);
