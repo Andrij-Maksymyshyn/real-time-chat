@@ -8,19 +8,19 @@ This is an online chat, where you can chat with your friends.
 ## Install
 
 ```sh
-yarn
+cd ./server yarn
 ```
 
 ## Usage
 
 ```sh
-yarn start
+cd ./server yarn start
 ```
 
 ## Development
 
 ```sh
-yarn dev
+cd ./server yarn dev
 ```
 
 ## Author
