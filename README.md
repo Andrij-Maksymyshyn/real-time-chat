@@ -1,26 +1,42 @@
 # Welcome to Real-time-chat 👋
 
-This is an online chat, where you can chat with your friends.
-(It's server part of project.)
+This is an online chat, where you can chat with your friends and have a good time.
 
 ### 🏠 [Homepage](https://github.com/Andrij-Maksymyshyn/real-time-chat)
 
-## Install
+## Install (server part of project)
 
 ```sh
-cd ./server yarn
+$ cd ./server
+$ yarn
 ```
 
-## Usage
+## Usage (server part of project)
 
 ```sh
-cd ./server yarn start
+$ cd ./server
+$ yarn start
 ```
 
-## Development
+## Development (server part of project)
 
 ```sh
-cd ./server yarn dev
+$ cd ./server
+$ yarn dev
+```
+
+## Install (client part of project)
+
+```sh
+$ cd ./client
+$ yarn
+```
+
+## Usage (client part of project)
+
+```sh
+$ cd ./client
+$ yarn start
 ```
 
 ## Author
