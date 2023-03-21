@@ -61,48 +61,59 @@ const Chat = () => {
     setMessage("");
   };
 
+  const toTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
-    <div className={styles.wrap}>
-      <div className={styles.header}>
-        <div className={styles.title}>{params.room}</div>
-        <div className={styles.user}>{users} users in this room</div>
-        <button className={styles.left} onClick={leftRoom}>
-          left the room
+    <>
+      <div className={styles.wrap}>
+        <div className={styles.header}>
+          <div className={styles.title}>{params.room}</div>
+          <div className={styles.user}>{users} users in this room</div>
+          <button className={styles.left} onClick={leftRoom}>
+            left the room
+          </button>
+        </div>
+
+        <div className={styles.messages}>
+          <Messages messages={report} name={params.name} />
+        </div>
+
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.input}>
+            <input
+              type="text"
+              name="message"
+              value={message}
+              placeholder="What do you want to say?"
+              onChange={handleChange}
+              autoComplete="off"
+              required
+            />
+          </div>
+
+          <div className={styles.emoji}>
+            <img src={icon} alt="icon" onClick={() => setIsOpen(!isOpen)} />
+
+            {isOpen && (
+              <div className={styles.emojies}>
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.button}>
+            <input type="submit" value="Send a message " />
+          </div>
+        </form>
+      </div>
+      {report.length > 12 && (
+        <button onClick={toTop} className={styles.topBtn}>
+          Up
         </button>
-      </div>
-
-      <div className={styles.messages}>
-        <Messages messages={report} name={params.name} />
-      </div>
-
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.input}>
-          <input
-            type="text"
-            name="message"
-            value={message}
-            placeholder="What do you want to say?"
-            onChange={handleChange}
-            autoComplete="off"
-            required
-          />
-        </div>
-
-        <div className={styles.emoji}>
-          <img src={icon} alt="icon" onClick={() => setIsOpen(!isOpen)} />
-
-          {isOpen && (
-            <div className={styles.emojies}>
-              <EmojiPicker onEmojiClick={onEmojiClick} />
-            </div>
-          )}
-        </div>
-
-        <div className={styles.button}>
-          <input type="submit" value="Send a message " />
-        </div>
-      </form>
-    </div>
+      )}
+    </>
   );
 };
 

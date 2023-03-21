@@ -68,18 +68,16 @@ io.on("connection", socket => {
     const user = removeUser(params);
 
     if (user) {
-      const { room, name } = user;
-
-      io.to(room).emit("message", {
+      io.to(user.room).emit("message", {
         data: {
           user: { name: "Admin" },
-          message: `${name} has left room: ${room}`
+          message: `${user.name} has left room: ${user.room}`
         }
       });
 
-      io.to(room).emit("room", {
+      io.to(user.room).emit("room", {
         data: {
-          users: getRoomUsers(room)
+          users: getRoomUsers(user.room)
         }
       });
     }
