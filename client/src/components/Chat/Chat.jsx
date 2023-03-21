@@ -17,6 +17,7 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState(0);
+  const [buttonToUp, setButtonToUp] = useState(true);
 
   useEffect(() => {
     const searchParams = Object.fromEntries(new URLSearchParams(search));
@@ -28,6 +29,7 @@ const Chat = () => {
   useEffect(() => {
     socket.on("message", ({ data }) => {
       setReport(_report => [..._report, data]);
+      setButtonToUp(true);
     });
   }, []);
 
@@ -63,6 +65,7 @@ const Chat = () => {
 
   const toTop = () => {
     window.scrollTo(0, 0);
+    setButtonToUp(!buttonToUp);
   };
 
   return (
@@ -108,7 +111,7 @@ const Chat = () => {
           </div>
         </form>
       </div>
-      {report.length > 12 && (
+      {(report.length > 12) & buttonToUp && (
         <button onClick={toTop} className={styles.topBtn}>
           Up
         </button>
