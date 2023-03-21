@@ -1,16 +1,15 @@
 const express = require("express");
 require("dotenv").config();
 const http = require("http");
-const EventEmitter = require("events");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const route = require("./routes/route");
-const { addUser } = require("./users/users");
-
-class MyEmitter extends EventEmitter {}
-const myEmitter = new MyEmitter();
-// increase the limit
-myEmitter.setMaxListeners(25);
+const {
+  addUser,
+  findUser,
+  getRoomUsers,
+  removeUser
+} = require("./users/users");
 
 const app = express();
 
@@ -30,22 +29,64 @@ io.on("connection", socket => {
   socket.on("join", ({ name, room }) => {
     socket.join(room);
 
-    const { user } = addUser({ name, room });
+    const { user, isUserExist } = addUser({ name, room });
+
+    const userMessage = isUserExist
+      ? `${user.name}, here you are again`
+      : `Hey dear, ${user.name}`;
 
     socket.emit("message", {
       data: {
         user: { name: "Admin" },
-        message: `Hey my love ${user.name}`
+        message: userMessage
       }
     });
 
     socket.broadcast.to(user.room).emit("message", {
-      data: { user: { name: "Admin" }, message: `${user.name} has joined` }
+      data: {
+        user: { name: "Admin" },
+        message: `${user.name} has joined`
+      }
+    });
+
+    io.to(user.room).emit("room", {
+      data: {
+        users: getRoomUsers(user.room)
+      }
     });
   });
 
+  socket.on("sendMessage", ({ message, params }) => {
+    const user = findUser(params);
+
+    if (user) {
+      io.to(user.room).emit("message", { data: { user, message } });
+    }
+  });
+
+  socket.on("leftRoom", ({ params }) => {
+    const user = removeUser(params);
+
+    if (user) {
+      const { room, name } = user;
+
+      io.to(room).emit("message", {
+        data: {
+          user: { name: "Admin" },
+          message: `${name} has left room: ${room}`
+        }
+      });
+
+      io.to(room).emit("room", {
+        data: {
+          users: getRoomUsers(room)
+        }
+      });
+    }
+  });
+
   io.on("disconnect", () => {
-    console.log("Disconnect"); // the Set contains at least the socket ID
+    console.log("Disconnect");
   });
 });
 
