@@ -33,6 +33,9 @@ const Chat = () => {
     });
   }, []);
 
+  const userId = report[0]?.userId;
+  const userJoinedId = report[1]?.userJoinedId;
+
   useEffect(() => {
     socket.on("room", ({ data: { users } }) => {
       setUsers(users.length);
@@ -59,7 +62,7 @@ const Chat = () => {
       return;
     }
 
-    socket.emit("sendMessage", { message, params });
+    socket.emit("sendMessage", { message, params, userId, userJoinedId });
     setMessage("");
   };
 
