@@ -34,7 +34,7 @@ const Chat = () => {
   }, []);
 
   const userId = report[0]?.userId;
-  const userJoinedId = report[1]?.userJoinedId;
+  const userJoinedId = report[1]?.userId;
 
   useEffect(() => {
     socket.on("room", ({ data: { users } }) => {
@@ -43,7 +43,7 @@ const Chat = () => {
   }, []);
 
   const leftRoom = () => {
-    socket.emit("leftRoom", { params });
+    socket.emit("leftRoom", { params, userId, userJoinedId });
     navigate("/");
   };
 
