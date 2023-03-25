@@ -58,8 +58,7 @@ io.on("connection", socket => {
     });
 
     const guest = await User.find({ userId: newUser._id });
-    const userId = guest[guest.length - 1]._id;
-    const userJoinedId = guest[guest.length - 1]._id;
+    const userId = guest[guest.length - 1]?._id;
 
     const userMessage = isUserExist
       ? `${user.name}, here you are again`
@@ -77,7 +76,7 @@ io.on("connection", socket => {
       data: {
         user: { name: "Admin" },
         message: `${user.name} has joined`,
-        userJoinedId
+        userId
       }
     });
 
@@ -111,7 +110,7 @@ io.on("connection", socket => {
     }
   );
 
-  socket.on("leftRoom", ({ params }) => {
+  socket.on("leftRoom", async ({ params, userId }) => {
     const user = removeUser(params);
 
     if (user) {
@@ -121,6 +120,29 @@ io.on("connection", socket => {
           message: `${user.name} has left room: ${user.room}`
         }
       });
+
+      await User.findByIdAndDelete(userId);
+
+      io.to(user.room).emit("room", {
+        data: {
+          users: getRoomUsers(user.room)
+        }
+      });
+    }
+  });
+
+  socket.on("leftRoom", async ({ params, userJoinedId }) => {
+    const user = removeUser(params);
+
+    if (user) {
+      io.to(user.room).emit("message", {
+        data: {
+          user: { name: "Admin" },
+          message: `${user.name} has left room: ${user.room}`
+        }
+      });
+
+      await User.findByIdAndDelete(userJoinedId);
 
       io.to(user.room).emit("room", {
         data: {
