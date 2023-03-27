@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
 
     chatroom: { type: String, trim: true, required: true, default: "" },
 
-    messageField: [String]
+    messageField: []
 
     // email: {
     //   type: String,

@@ -4,13 +4,7 @@ const listUsers = async (_, res, next) => {
   try {
     const result = await services.getAllUsers();
 
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result
-      }
-    });
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }

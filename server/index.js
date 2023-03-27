@@ -72,6 +72,18 @@ io.on("connection", socket => {
       }
     });
 
+    await User.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          messageField: {
+            user: { name: "Admin" },
+            message: userMessage
+          }
+        }
+      }
+    );
+
     socket.broadcast.to(user.room).emit("message", {
       data: {
         user: { name: "Admin" },

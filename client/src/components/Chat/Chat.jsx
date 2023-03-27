@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import EmojiPicker from "emoji-picker-react";
+import axios from "axios";
 
 import Messages from "../Messages";
 import icon from "../../images/emoji.svg";
@@ -17,6 +18,7 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState(0);
+  const [members, setMembers] = useState([]);
   const [buttonToUp, setButtonToUp] = useState(true);
 
   useEffect(() => {
@@ -41,6 +43,20 @@ const Chat = () => {
       setUsers(users.length);
     });
   }, []);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/users`);
+        setMembers(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUsers();
+  }, [params]);
+
+  const newUser = members[members.length - 1]?.userName;
 
   const leftRoom = () => {
     socket.emit("leftRoom", { params, userId, userJoinedId });
@@ -83,7 +99,7 @@ const Chat = () => {
         </div>
 
         <div className={styles.messages}>
-          <Messages messages={report} name={params.name} />
+          <Messages messages={report} name={newUser} />
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
